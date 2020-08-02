@@ -13,6 +13,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import main.java.Client.Students;
 
+import java.util.LinkedList;
+
 
 public class WorkController {
     @FXML
@@ -112,19 +114,54 @@ public class WorkController {
         show.setOnAction(event -> {
             SendCommand.show(table);
         });
-
+        add.setOnAction(event -> {
+            SendCommand.add(table);
+        });
+        update.setOnAction(event -> {
+        SendCommand.update(table);
+        });
+        remove_by_id.setOnAction(event -> {
+            SendCommand.remove_by_id(table);
+        });
+        clear.setOnAction(event -> {
+            SendCommand.clear(table);
+        });
+        head.setOnAction(event -> {
+            SendCommand.head();
+        });
+        remove_head.setOnAction(event -> {
+            SendCommand.remove_head(table);
+        });
+        remove_lower.setOnAction(event -> {
+            SendCommand.remove_lower(table);
+        });
+        remove_any_by_form_education.setOnAction(event -> {
+            SendCommand.remove_any_by_form_education(table);
+        });
+        filter_strats_with_name.setOnAction(event -> {
+            SendCommand.filter_strats_with_name(table);
+        });
+        filter_greater_than_students_count.setOnAction(event -> {
+            SendCommand.filter_greater_than_students_count(table);
+        });
+        exit.setOnAction(event -> {
+            System.exit(0);
+        });
     }
 
-    //todo
-    public void FillTable(String[] string, TableView<Students> table) {
-        System.out.println(table);
-        table.setItems(getStudents(string));
+
+    public void FillTable(LinkedList list, TableView<Students> table) {
+        table.setItems(getStudents(list));
     }
 
-    public static ObservableList<Students> getStudents(String[] str) {
+    public static ObservableList<Students> getStudents(LinkedList<String> list) {
         ObservableList<Students> students = FXCollections.observableArrayList();
-        students.add(new Students(str[0], str[1], str[2], str[3], str[4], str[5], str[6], str[7],
-                str[8], str[9], str[10], str[11]));
+        list.stream().forEach(element -> {
+            String[] str = element.split(",");
+            students.add(new Students(str[0], str[1], str[2], str[3], str[4], str[5], str[6], str[7],
+                    str[8], str[9], str[10], str[11]));
+        });
+
         return students;
     }
 
@@ -138,14 +175,14 @@ public class WorkController {
         admin_name_column.setCellValueFactory(new PropertyValueFactory<>("admin_name"));
         height_column.setCellValueFactory(new PropertyValueFactory<>("height"));
         weight_column.setCellValueFactory(new PropertyValueFactory<>("weight"));
-        eye_color_column.setCellValueFactory(new PropertyValueFactory<>("eye_color"));
+        eye_color_column.setCellValueFactory(new PropertyValueFactory<>("eyeColor"));
         x_column.setCellValueFactory(new PropertyValueFactory<>("x"));
         y_column.setCellValueFactory(new PropertyValueFactory<>("y"));
     }
 
-    public void CanvasWork(){
+    public void CanvasWork() {
 
-        GraphicsContext context=canvas.getGraphicsContext2D();
+        GraphicsContext context = canvas.getGraphicsContext2D();
         context.setFill(Color.BLACK);
 
     }

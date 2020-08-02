@@ -47,11 +47,11 @@ public class StudyGroup {
             expelledStudents=2L;
         }
         form=form.trim();
-        if (form.equals("full time") == true || form.equals("FULL_TIME_EDUCATION") == true) this.formOfEducation = Enum.FormOfEducation.FULL_TIME_EDUCATION;
+        if (form.equalsIgnoreCase("full time") == true || form.equals("FULL_TIME_EDUCATION") == true) this.formOfEducation = Enum.FormOfEducation.FULL_TIME_EDUCATION;
         else
-        if (form.equals("distance") == true|| form.equals("DISTANCE_EDUCATION") == true) this.formOfEducation = Enum.FormOfEducation.DISTANCE_EDUCATION;
+        if (form.equalsIgnoreCase("distance") == true|| form.equals("DISTANCE_EDUCATION") == true) this.formOfEducation = Enum.FormOfEducation.DISTANCE_EDUCATION;
         else
-        if (form.equals("evening") == true|| form.equals("EVENING_CLASSES") == true) this.formOfEducation = Enum.FormOfEducation.EVENING_CLASSES;
+        if (form.equalsIgnoreCase("evening") == true|| form.equals("EVENING_CLASSES") == true) this.formOfEducation = Enum.FormOfEducation.EVENING_CLASSES;
         else  {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
             System.exit(0);

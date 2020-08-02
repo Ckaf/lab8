@@ -455,7 +455,8 @@ public class AllCmd {
 
     public static void filter_starts_with_name(Queue<StudyGroup> StudyGroupPriorityQueue, String name) {
         answer = "";
-        StudyGroupPriorityQueue.stream().filter(student -> student.getName().trim().startsWith(name)).forEach(student -> answer =
+        StudyGroupPriorityQueue.stream().filter(student -> student.getName().trim().startsWith(name)).forEach(student ->
+                answer =answer+"\n"+
                 "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n"
         );
@@ -469,7 +470,7 @@ public class AllCmd {
         answer = "";
 
         StudyGroupPriorityQueue.stream().filter(student -> student.getStudentsCount() > count).forEach(student -> answer =
-                answer + "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
+                answer+"\n" + "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n");
         answerr.setAnswer(answer);
         answerr.cmd="filter_greater_than_students_count";

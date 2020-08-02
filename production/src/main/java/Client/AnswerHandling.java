@@ -24,16 +24,16 @@ public class AnswerHandling {
 
             }
             if (cmd.equalsIgnoreCase("update")) {
-
+                MessageAlert.showMessage(answer.answer);
             }
             if (cmd.equalsIgnoreCase("remove_by_id")) {
-
+                MessageAlert.showMessage(answer.answer);
             }
             if (cmd.equalsIgnoreCase("clear")) {
 
             }
             if (cmd.equalsIgnoreCase("head")) {
-
+                MessageAlert.showMessage("Верхний элемент таблицы:" + answer.answer);
             }
             if (cmd.equalsIgnoreCase("remove_head")) {
 
@@ -45,10 +45,10 @@ public class AnswerHandling {
 
             }
             if (cmd.equalsIgnoreCase("filter_starts_with_name")) {
-
+                MessageAlert.showMessage("Полученыне элементы:"+answer.answer);
             }
             if (cmd.equalsIgnoreCase("filter_greater_than_students_count")) {
-
+                MessageAlert.showMessage("Полученыне элементы:"+answer.answer);
             }
         } catch (NullPointerException e) {
         }
@@ -57,14 +57,8 @@ public class AnswerHandling {
     public static void CheckCmd(Answer answer, TableView<Students> table) {
         String cmd = answer.cmd;
         if (cmd.equalsIgnoreCase("show")) {
-            answer.list.stream().forEach((str) -> {
-                String[] stringArray;
-                System.out.println(str);
-                stringArray = str.split(",");
-                WorkController workController = new WorkController();
-                workController.FillTable(stringArray,table);
-            });
-            //WorkController.table.refresh();
+            WorkController workController = new WorkController();
+            workController.FillTable(answer.list, table);
         }
     }
 }

@@ -40,7 +40,6 @@ public class Controller {
             if (!pass_field.getText().isEmpty() && !login_field.getText().isEmpty()) {
                 SendCommand.Autorizaton(pass_field.getText(), login_field.getText());
                 Stage stage = (Stage) registration.getScene().getWindow();
-                // do what you have to do
                 stage.close();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sample/visual/work.fxml"));
                 Parent root1 = null;
@@ -63,7 +62,6 @@ public class Controller {
                 SendCommand.Registration(pass_field.getText(), login_field.getText());
 
                 Stage stage = (Stage) registration.getScene().getWindow();
-                // do what you have to do
                 stage.close();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sample/visual/work.fxml"));
                 Parent root1 = null;
