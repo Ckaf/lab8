@@ -44,7 +44,7 @@ public class Controller {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sample/visual/work.fxml"));
                 Parent root1 = null;
                 try {
-                    root1 = (Parent) fxmlLoader.load();
+                    root1 = fxmlLoader.load();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -79,6 +79,7 @@ public class AddController {
                 information.cmdtype = "add";
                 information.login = login;
                 information.pass = password;
+                information.isUpdate=true;
                 client.run(information);
             } catch (Exception er) {
                 ErorAlert.alert("Неправильно заполнены поля");

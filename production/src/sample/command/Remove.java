@@ -31,6 +31,7 @@ public class Remove {
                information.login = login;
                information.pass = password;
                information.idstr=id.getText();
+               information.isUpdate=true;
                client.run(information);
            }
            catch (Exception e){

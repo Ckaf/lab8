@@ -142,6 +142,9 @@ public class MessageHandling {
             }
         Answer answer=AllCmd.answerr;
         Server.sendler(answer,socketAddress);
+        if (information.isUpdate){
+            Synchronization.synchronization();
+        }
         }
         public synchronized static void HandlingThread(byte[] buffer,SocketAddress socketAddress){
             ExecutorService service= Executors.newFixedThreadPool(1);

@@ -52,7 +52,7 @@
           </Tab>
           <Tab fx:id="graphics_tab" text="Графическое представление">
                <content>
-                  <Canvas fx:id="canvas" height="369.0" width="772.0" />
+                  <Canvas fx:id="canvas" height="350.0" width="770.0" />
                </content>
           </Tab>
         </tabs>

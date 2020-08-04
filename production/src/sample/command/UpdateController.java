@@ -78,6 +78,7 @@ public class UpdateController {
                 information.cmdtype = "update";
                 information.login = login;
                 information.pass = password;
+                information.isUpdate=true;
                 client.run(information);
             } catch (Exception er) {
                 er.printStackTrace();

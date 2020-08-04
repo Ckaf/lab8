@@ -3,17 +3,18 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
 import main.java.Client.Students;
+import sample.Paint;
 
 import java.util.LinkedList;
+
+import static sample.Paint.CheckFigure;
 
 
 public class WorkController {
@@ -104,6 +105,11 @@ public class WorkController {
     @FXML
     void initialize() {
         CanvasWork();
+        canvas.setOnMouseMoved(event -> {
+            double x=event.getX();
+            double y=event.getY();
+            CheckFigure(x,y,table);
+        });
         columnSettings();
         help.setOnAction(event -> {
             SendCommand.help();
@@ -152,6 +158,7 @@ public class WorkController {
 
     public void FillTable(LinkedList list, TableView<Students> table) {
         table.setItems(getStudents(list));
+        Paint.DrawElement(table);
     }
 
     public static ObservableList<Students> getStudents(LinkedList<String> list) {
@@ -181,10 +188,8 @@ public class WorkController {
     }
 
     public void CanvasWork() {
-
-        GraphicsContext context = canvas.getGraphicsContext2D();
-        context.setFill(Color.BLACK);
-
+        Paint.setCanvas(canvas);
+        Paint.drawAxis();
     }
 
 }

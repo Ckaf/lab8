@@ -27,6 +27,7 @@ public class RemoveForm {
             information.login = login;
             information.pass = password;
             information.form=form.getValue();
+            information.isUpdate=true;
             client.run(information);
         });
     }

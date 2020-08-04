@@ -7,6 +7,7 @@ import java.io.Serializable;
 public class Information implements Serializable {
     //transient
     private static final long serialVersionUID=34567890L;
+    public boolean isUpdate;
     public String regtype;
     public String login;
     public String pass;
