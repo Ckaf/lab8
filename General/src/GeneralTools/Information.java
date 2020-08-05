@@ -1,12 +1,16 @@
 package GeneralTools;
 
 import java.io.Serializable;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 /**
  * Class that stores information received from the client
  */
 public class Information implements Serializable {
     //transient
     private static final long serialVersionUID=34567890L;
+    public InetSocketAddress address;
     public boolean isUpdate;
     public String regtype;
     public String login;

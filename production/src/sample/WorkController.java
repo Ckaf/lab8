@@ -111,6 +111,13 @@ public class WorkController {
             CheckFigure(x,y,table);
         });
         columnSettings();
+
+        Runnable task=()->{
+            Synchronization.synchronization(table);
+        };
+        Thread thread=new Thread(task);
+        thread.start();
+
         help.setOnAction(event -> {
             SendCommand.help();
         });

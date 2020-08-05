@@ -26,7 +26,6 @@ public class Server {
     public static DatagramPacket datagramPacket;
 
     public static void connect(int port) {
-
         try {
             address = new InetSocketAddress(port);
             datagramSocket = new DatagramSocket(address);

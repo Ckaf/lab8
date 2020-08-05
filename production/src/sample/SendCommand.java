@@ -11,18 +11,31 @@ import main.java.Client.Client;
 import main.java.Client.Students;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.SocketAddress;
 
 public class SendCommand {
     public static String password;
     public static String login;
     static Information information = new Information();
     public static Client client = new Client();
+    //public static InetSocketAddress UpdateAddress=new InetSocketAddress(0);
+    public static ServerSocket ss;
+    static {
+        try {
+            ss = new ServerSocket();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void Autorizaton(String pass, String log) {
         information.cmdtype = "connect";
         information.regtype = "aut";
         information.login = log;
         information.pass = pass;
+        information.address=generateAddress();
         client.run(information);
         password = pass;
         login = log;
@@ -31,6 +44,7 @@ public class SendCommand {
     public static void Registration(String pass, String log) {
         information.cmdtype = "connect";
         information.regtype = "reg";
+        information.address=generateAddress();
         information.login = log;
         information.pass = pass;
         client.run(information);
@@ -60,21 +74,15 @@ public class SendCommand {
     }
 
     public static void add(TableView<Students> table) {
-        show(table);
         show("/sample/visual/add.fxml");
-        show(table);
     }
 
     public static void update(TableView<Students> table) {
-        show(table);
         show("/sample/visual/update.fxml");
-        show(table);
     }
 
     public static void remove_by_id(TableView<Students> table) {
-        show(table);
         show("/sample/visual/remove.fxml");
-        show(table);
     }
 
     public static void clear(TableView<Students> table) {
@@ -82,7 +90,6 @@ public class SendCommand {
         information.login = login;
         information.pass = password;
         client.run(information);
-        show(table);
     }
 
     public static void head() {
@@ -96,13 +103,12 @@ public class SendCommand {
         information.cmdtype = "remove_head";
         information.login = login;
         information.pass = password;
+        information.isUpdate=true;
         client.run(information);
-        show(table);
     }
 
     public static void remove_lower(TableView<Students> table) {
         show("/sample/visual/remove_lower.fxml");
-        show(table);
     }
 
     public static void remove_any_by_form_education(TableView<Students> table) {
@@ -130,5 +136,17 @@ public class SendCommand {
         stage.setTitle("Lab 8");
         stage.setScene(new Scene(root1));
         stage.show();
+    }
+
+    public static InetSocketAddress generateAddress(){
+
+            try {
+                ss.bind(new InetSocketAddress(0));
+            } catch (IOException e) {
+
+            }
+        InetSocketAddress socketAddress=new InetSocketAddress("localhost",ss.getLocalPort());
+
+        return socketAddress;
     }
 }

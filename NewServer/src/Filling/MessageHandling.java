@@ -40,6 +40,7 @@ public class MessageHandling {
             UserNumber.add(socketAddress);
             User user = new User();
             user.number = socketAddress;
+            user.UpdateAddress= information.address;
             if (Command.isExistingUser(information.login,information.pass).equals("NOTHING") && information.regtype.equalsIgnoreCase("reg")) {
                 Logger.login(Level.INFO,"Зарегестрировался пользователь с логином: "+information.login);
                 Command.registrationUser(information.login,information.pass);
@@ -49,6 +50,7 @@ public class MessageHandling {
                 if (!Command.isExistingUser(information.login,information.pass).equals("NOTHING")) {
                     Logger.login(Level.INFO,"Авторизировался пользователь с логином: "+information.login);
                     AllCmd.answerr.autorizatonflag = "autOk";
+                    UserList.add(user);
                 }
                 else  AllCmd.answerr.autorizatonflag = "fail";
             } else AllCmd.answerr.autorizatonflag = "fail";
@@ -141,10 +143,11 @@ public class MessageHandling {
                catch (NullPointerException e){}
             }
         Answer answer=AllCmd.answerr;
-        Server.sendler(answer,socketAddress);
         if (information.isUpdate){
             Synchronization.synchronization();
         }
+        Server.sendler(answer,socketAddress);
+
         }
         public synchronized static void HandlingThread(byte[] buffer,SocketAddress socketAddress){
             ExecutorService service= Executors.newFixedThreadPool(1);
