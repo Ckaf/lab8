@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.java.Client.Client;
@@ -20,7 +21,6 @@ public class SendCommand {
     public static String login;
     static Information information = new Information();
     public static Client client = new Client();
-    //public static InetSocketAddress UpdateAddress=new InetSocketAddress(0);
     public static ServerSocket ss;
     static {
         try {
@@ -121,6 +121,13 @@ public class SendCommand {
 
     public static void filter_greater_than_students_count(TableView<Students> table) {
         show("/sample/visual/filter_count.fxml");
+    }
+
+    public static void getColor(Rectangle ColorRect){
+        information.cmdtype="getColor";
+        information.login = login;
+        information.pass = password;
+        client.run(information,ColorRect);
     }
 
     public static void show(String path) {

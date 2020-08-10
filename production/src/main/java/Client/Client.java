@@ -4,7 +4,9 @@ import GeneralTools.Answer;
 import GeneralTools.Information;
 import GeneralTools.SerializationManager;
 import javafx.scene.control.TableView;
+import javafx.scene.shape.Rectangle;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.PortUnreachableException;
@@ -37,7 +39,7 @@ public class Client {
         }
     }
 
-
+//Адский говнокод, не бейте
     public static void run(Information information, TableView<Students> table) {
         try {
             byte[] commandInBytes = commandSerializationManager.writeObject(information);
@@ -137,6 +139,59 @@ public class Client {
                     //todo
                     //System.out.print(result.getAnswer());
                     //System.out.println();
+                    buffer.clear();
+                } else {
+                    System.out.println(result.answer);
+                }
+            }
+            try {
+                if (result.getWrong() == 1) System.exit(0);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void run(Information information, Rectangle ColorRect) {
+        try {
+            byte[] commandInBytes = commandSerializationManager.writeObject(information);
+            buffer = ByteBuffer.wrap(commandInBytes);
+            channel.send(buffer, address);
+            buffer.clear();
+
+            byte[] answerInBytes = new byte[BUFFER_SIZE];
+            //System.out.println("Запрос отправлен на сервер...");
+            buffer = ByteBuffer.wrap(answerInBytes);
+            address = null;
+            do {
+                try {
+
+                    try {
+                        address = channel.receive(buffer);
+                    } catch (PortUnreachableException e) {
+                        System.out.println("Сервер недоступен");
+                        System.exit(0);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } while (address == null);
+            Answer result = new Answer();
+            result = responseSerializationManager.readObject(answerInBytes);
+            try {
+                if (result.autorizatonflag.equals("fail")){
+                    System.out.println(result.getAnswer());
+                    System.exit(0);
+                }
+            }
+            catch (NullPointerException e){}
+            if (result.wrong == -1) flag = 1;
+            else {
+                if (result.wrong != 2) {
+                    AnswerHandling.CheckCmd(result,ColorRect);
                     buffer.clear();
                 } else {
                     System.out.println(result.answer);

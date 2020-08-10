@@ -4,17 +4,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.shape.Rectangle;
 import main.java.Client.Students;
 import sample.Paint;
 
+import java.awt.*;
 import java.util.LinkedList;
 
 import static sample.Paint.CheckFigure;
+import static sample.SendCommand.getColor;
+import static sample.SendCommand.login;
 
 
 public class WorkController {
@@ -103,21 +106,33 @@ public class WorkController {
     private Canvas canvas;
 
     @FXML
-    void initialize() {
-        CanvasWork();
-        canvas.setOnMouseMoved(event -> {
-            double x=event.getX();
-            double y=event.getY();
-            CheckFigure(x,y,table);
-        });
-        columnSettings();
+    private Label UserLabel;
 
+    @FXML
+    private Rectangle ColorRect;
+
+    @FXML
+    private TableColumn<Students, String> login_column;
+
+    @FXML
+    void initialize() {
+        UserLabel.setText(login);
         Runnable task=()->{
             Synchronization.synchronization(table);
         };
         Thread thread=new Thread(task);
         thread.start();
 
+        getColor(ColorRect);
+        CanvasWork();
+        canvas.setOnMouseClicked(event -> {
+            double x=event.getX();
+            double y=event.getY();
+            CheckFigure(x,y,table);
+        });
+        columnSettings();
+
+        UserLabel.setText(login);
         help.setOnAction(event -> {
             SendCommand.help();
         });
@@ -173,7 +188,7 @@ public class WorkController {
         list.stream().forEach(element -> {
             String[] str = element.split(",");
             students.add(new Students(str[0], str[1], str[2], str[3], str[4], str[5], str[6], str[7],
-                    str[8], str[9], str[10], str[11]));
+                    str[8], str[9], str[10], str[11],str[12],str[13]));
         });
 
         return students;
@@ -192,6 +207,7 @@ public class WorkController {
         eye_color_column.setCellValueFactory(new PropertyValueFactory<>("eyeColor"));
         x_column.setCellValueFactory(new PropertyValueFactory<>("x"));
         y_column.setCellValueFactory(new PropertyValueFactory<>("y"));
+        login_column.setCellValueFactory(new PropertyValueFactory<>("User"));
     }
 
     public void CanvasWork() {
@@ -199,4 +215,7 @@ public class WorkController {
         Paint.drawAxis();
     }
 
+    public void setColor(String color,Rectangle ColorRect){
+    ColorRect.setFill(javafx.scene.paint.Paint.valueOf(color));
+    }
 }

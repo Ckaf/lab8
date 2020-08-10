@@ -2,8 +2,11 @@ package sample;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import main.java.Client.Students;
+
+import java.util.ResourceBundle;
 
 
 public class Paint {
@@ -68,31 +71,36 @@ public class Paint {
 
     public static void DrawElement(TableView<Students> table) {
         table.getItems().stream().forEach((element) -> {
-            DrawCircle(element.getX(), element.getY(), element.getWeight(), element.getHeight(), element.getEyeColor());
+            DrawCircle(element.getX(), element.getY(), element.getWeight(), element.getHeight(), element.getUserColor());
         });
     }
 
     public static void DrawCircle(String strX, String strY, String strWight, String strHeight, String color) {
-        double x = Double.parseDouble(strX);
-        double y = Double.parseDouble(strY);
         double wight = Double.parseDouble(strWight) / 2;
-        double height = Double.parseDouble(strHeight) / 2;
+        double height = Double.parseDouble(strHeight) / 4;
+        double x = Double.parseDouble(strX)*2-wight/2;
+        double y = Double.parseDouble(strY)*2+height/2;
         context.setFill(javafx.scene.paint.Paint.valueOf(color));
-        context.fillOval(context.getCanvas().getWidth() / 2 + x/2, context.getCanvas().getHeight() / 2 - y/2, wight, height);
+        context.fillOval(context.getCanvas().getWidth() / 2 + x, context.getCanvas().getHeight() / 2 - y, wight, height);
     }
     public static void CheckFigure(double x,double y,TableView<Students> table){
         double finalX =(x-canvas.getWidth()/2)/2;
-        double finalY=(-y+canvas.getHeight()/2)/2;
-
+        double finalY=(-y+canvas.getHeight()/2)/2 ;
+        System.out.println("координаты:"+ finalX+" "+finalY);
         table.getItems().stream().forEach(element->{
             double elementX= Double.parseDouble(element.getX());
             double elementY= Double.parseDouble(element.getY());
-            double height= Double.parseDouble(element.getHeight());
-            double weight= Double.parseDouble(element.getWeight());
-            if ((((Math.pow(finalX,2)-elementX) /(weight))+((Math.pow(finalY,2)-elementY)/height))<=1) {
-               //System.out.println(((Math.pow(finalX,2)/(weight))+(Math.pow(finalY,2)/(height))));
-
-                System.out.println("boyyy"+"==============");
+            double height= Double.parseDouble(element.getHeight())/4;
+            double wight= Double.parseDouble(element.getWeight())/2;
+            if ((((Math.pow(finalX-elementX,2)/Math.pow(wight/2,2))+((Math.pow(finalY-elementY,2))/Math.pow(height/2,2)))<=1)) {
+                System.out.println("element: "+elementX+" "+elementY);
+                System.out.println("полуоси: "+wight+" "+height);
+                System.out.println("==================");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("info");
+                //alert.setHeaderText();
+                alert.setContentText(element.getStudents(element));
+                alert.showAndWait();
             }
         });
     }

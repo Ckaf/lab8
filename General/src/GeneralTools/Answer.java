@@ -1,5 +1,6 @@
 package GeneralTools;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,6 +10,7 @@ import java.util.PriorityQueue;
  * Class that stores information received from the server
  */
 public class Answer implements Serializable {
+    public String UserColor;
     public String cmd;
     public String answer;
     public String answer1;

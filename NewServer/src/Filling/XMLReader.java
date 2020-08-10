@@ -51,11 +51,11 @@ public class XMLReader {
                 NamedNodeMap attributes = student.getAttributes();
 
                 // Добавление студента. Атрибут - Node, потому нам нужно получить значение атрибута с помощью метода getNodeValue()
-                StudyGroupPriorityQueue.add(new StudyGroup(StudyGroupPriorityQueue, attributes.getNamedItem("name").getNodeValue(), attributes.getNamedItem("count").getNodeValue(), attributes.getNamedItem("exp").getNodeValue(),
+               /* StudyGroupPriorityQueue.add(new StudyGroup(StudyGroupPriorityQueue, attributes.getNamedItem("name").getNodeValue(), attributes.getNamedItem("count").getNodeValue(), attributes.getNamedItem("exp").getNodeValue(),
                         attributes.getNamedItem("form").getNodeValue(), attributes.getNamedItem("semester").getNodeValue(), attributes.getNamedItem("groupAdmin").getNodeValue(), attributes.getNamedItem("height").getNodeValue(),
                         attributes.getNamedItem("weight").getNodeValue(), attributes.getNamedItem("eyeColor").getNodeValue(),
-                        attributes.getNamedItem("X").getNodeValue(), attributes.getNamedItem("Y").getNodeValue()));
-
+                        attributes.getNamedItem("X").getNodeValue(), attributes.getNamedItem("Y").getNodeValue(),));
+*/
                 flag = 0;
             }
         } catch (Exception e) {

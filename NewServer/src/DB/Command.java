@@ -1,11 +1,9 @@
 package DB;
 
-import Filling.AllCmd;
-import Filling.MessageHandling;
-import Filling.StudyGroup;
-import Filling.XMLReader;
+import Filling.*;
 import GeneralTools.Information;
 
+import java.awt.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.PriorityQueue;
 import java.util.Queue;
+
+import static Filling.MessageHandling.UserList;
 
 public class Command {
     static Statement statement;
@@ -42,10 +42,16 @@ public class Command {
             String eyeColor = resultSet.getString(10);
             String X = resultSet.getString(11);
             String Y = resultSet.getString(12);
-            StudyGroup studyGroup = new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, gA, height, weight, eyeColor, X, Y);
+            String User = resultSet.getString(13);
+            String color = resultSet.getString(14);
+            StudyGroup studyGroup = new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, gA, height, weight, eyeColor, X, Y,User,color);
             studyGroup.setId(id);
             StudyGroupPriorityQueue.add(studyGroup);
             // Filling.MessageHandling.StudyGroupPriorityQueue.add(studyGroup);
+            User user=new User();
+            user.login=User;
+            user.UserColor= color;
+            UserList.add(user);
         }
         MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
 
@@ -101,7 +107,7 @@ public class Command {
             e.printStackTrace();
         }
 
-        PreparedStatement preparedStatement = Connect.connection.prepareStatement("INSERT INTO mytabl VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        PreparedStatement preparedStatement = Connect.connection.prepareStatement("INSERT INTO mytabl VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
         preparedStatement.setInt(1, generate_id());
         preparedStatement.setString(2, name);
         preparedStatement.setInt(3, Integer.parseInt(count));
@@ -115,6 +121,11 @@ public class Command {
         preparedStatement.setFloat(11, Float.parseFloat(X));
         preparedStatement.setDouble(12, Double.parseDouble(Y));
         preparedStatement.setString(13, information.login);
+        final String[] color = new String[1];
+        UserList.stream().forEach(user -> {
+            if (user.login.equals(information.login)) color[0] =user.UserColor;
+        });
+        preparedStatement.setString(14, String.valueOf(color[0]));
 
 
         try {

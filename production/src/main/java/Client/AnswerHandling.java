@@ -3,11 +3,10 @@ package main.java.Client;
 import GeneralTools.Answer;
 
 import javafx.scene.control.TableView;
+import javafx.scene.shape.Rectangle;
 import sample.WorkController;
 import sample.tools.MessageAlert;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class AnswerHandling {
     public static void CheckCmd(Answer answer) {
@@ -59,6 +58,14 @@ public class AnswerHandling {
         if (cmd.equalsIgnoreCase("show")) {
             WorkController workController = new WorkController();
             workController.FillTable(answer.list, table);
+        }
+    }
+
+    public static void CheckCmd(Answer answer, Rectangle ColorRect){
+        String cmd = answer.cmd;
+        if (cmd.equalsIgnoreCase("getColor")) {
+            WorkController workController = new WorkController();
+            workController.setColor(answer.UserColor,ColorRect);
         }
     }
 }

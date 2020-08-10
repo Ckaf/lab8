@@ -4,12 +4,14 @@ import DB.Command;
 import GeneralTools.Answer;
 import GeneralTools.Information;
 
+
+import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 import java.util.logging.Level;
+
+import static Filling.MessageHandling.UserList;
 
 
 /**
@@ -34,7 +36,7 @@ public class AllCmd {
                 "remove_any_by_form_of_education formOfEducation : удалить из коллекции один элемент, значение поля formOfEducation которого эквивалентно заданному\n" +
                 "filter_starts_with_name name : вывести элементы, значение поля name которых начинается с заданной подстроки\n" +
                 "filter_greater_than_students_count studentsCount : вывести элементы, значение поля studentsCount которых больше заданного)";
-        answerr.cmd="help";
+        answerr.cmd = "help";
         answerr.setAnswer(answer);
     }
 
@@ -45,21 +47,56 @@ public class AllCmd {
 
     public static void show(Queue<StudyGroup> StudyGroupPriorityQueue) {
         answer = "";
-        answerr.list=new LinkedList<>();
+        answerr.list = new LinkedList<>();
         MessageHandling.StudyGroupPriorityQueue.stream().sorted(XMLReader.countComparator).forEach(student ->
-                answerr.list.add(student.getId()+","+student.getName() + "," + student.getStudentsCount() + "," + student.getexp() + "," + student.getFormOfEducation() +   ","+student.getSemesterEnum()+","+ student.getAdminName()
-                        + "," + student.getHeight() + "," + student.getWeight() + "," + student.getColor() + "," + student.getCoordinatesX() + "," + student.getCoordinatesY()));
-        answerr.cmd="show";
+                answerr.list.add(student.getId() + "," + student.getName() + "," + student.getStudentsCount() + "," + student.getexp() + "," + student.getFormOfEducation() + "," + student.getSemesterEnum() + "," + student.getAdminName()
+                        + "," + student.getHeight() + "," + student.getWeight() + "," + student.getColor() + "," + student.getCoordinatesX() + "," + student.getCoordinatesY() + "," + student.getUser() + "," + student.getUserColor()));
+        answerr.cmd = "show";
         answerr.setAnswer(answer);
+    }
+
+    public static void getColor(Information information) {
+        HashSet<String> ColorList = new HashSet<>();
+        UserList.stream().forEach(user -> {
+            ColorList.add(user.UserColor);
+        });
+        UserList.stream().forEach(user -> {
+            if (user.login.equals(information.login)) {
+                if (user.UserColor != null) {
+                    answerr.cmd = "getColor";
+                    answerr.UserColor = user.UserColor;
+                } else {
+                    //генерируем цвет
+                    while (true) {
+                        try {
+
+                            Random rand = new Random();
+                            float r = (float) (rand.nextFloat() / 2f + 0.5);
+                            float g = (float) (rand.nextFloat() / 2f + 0.5);
+                            float b = (float) (rand.nextFloat() / 2f + 0.5);
+                            String hex = String.format("#%02X%02X%02X",
+                                    (int) (r * 255),
+                                    (int) (g * 255),
+                                    (int) (b * 255));
+                            if (!ColorList.contains(hex)) {
+                                user.UserColor = hex;
+                                answerr.cmd = "getColor";
+                                answerr.UserColor = user.UserColor;
+                                break;
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public static void add(String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y, Queue<StudyGroup> StudyGroupPriorityQueue, Information information) throws Exception {
         Command.add(name, count, exp, form, semestr, groupAdmin, height, weight, eyeColor, X, Y, information);
-        //StudyGroupPriorityQueue.add(new Filling.StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, groupAdmin, height, weight, eyeColor, X, Y));
         answer = "Элемент добавлен";
-        answerr.cmd="add";
+        answerr.cmd = "add";
         answerr.setAnswer(answer);
-        //  Filling.MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
     }
 
     public static void update(Information information) throws SQLException {
@@ -77,19 +114,18 @@ public class AllCmd {
             answer = "Этот элемент не пренадлежит вам, вы не можете его изменять";
             Logger.login(Level.INFO, "Попытка изменения элемента не удалась");
         }
-        answerr.cmd="update";
+        answerr.cmd = "update";
         answerr.setAnswer(answer);
     }
 
 
     public static void remove_by_id(Information information) throws Exception {
-        if(Command.checkLogin(information)) {
+        if (Command.checkLogin(information)) {
             Command.remove_by_id(information);
             Command.readdb();
             answer = "Элемент удален";
-        }
-        else answer="Вы не можете удалить этот элемент";
-        answerr.cmd="remove_by_id";
+        } else answer = "Вы не можете удалить этот элемент";
+        answerr.cmd = "remove_by_id";
         answerr.setAnswer(answer);
     }
 
@@ -97,7 +133,7 @@ public class AllCmd {
         Command.clear(information);
         Command.readdb();
         answer = "Ваши элементы удалены";
-        answerr.cmd="clear";
+        answerr.cmd = "clear";
         answerr.setAnswer(answer);
     }
 
@@ -425,15 +461,15 @@ public class AllCmd {
             answer = "Нет здесь никакого первого элемента";
             answerr.setAnswer(answer);
         }
-        answerr.cmd="head";
+        answerr.cmd = "head";
     }
 
     public static void remove_head(Information information) throws Exception {
         Command.remove_head(information);
         Command.readdb();
         answerr.setAnswer(answer);
-        answerr.cmd="remove_head";
-       // Filling.MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().skip(1).collect(Collectors.toCollection(() -> new PriorityQueue<>(Filling.XMLReader.countComparator)));
+        answerr.cmd = "remove_head";
+        // Filling.MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().skip(1).collect(Collectors.toCollection(() -> new PriorityQueue<>(Filling.XMLReader.countComparator)));
     }
 
     public static void remove_lover(Information information) throws Exception {
@@ -441,7 +477,7 @@ public class AllCmd {
         Command.readdb();
         answer = "Элементы, принадлежащие вам, удалены";
         answerr.setAnswer(answer);
-        answerr.cmd="remove_lower";
+        answerr.cmd = "remove_lower";
     }
 
 
@@ -450,19 +486,19 @@ public class AllCmd {
         Command.readdb();
         answer = "Элементы, принадлежащие вам, удалены";
         answerr.setAnswer(answer);
-        answerr.cmd="remove_any_by_form_of_education";
+        answerr.cmd = "remove_any_by_form_of_education";
     }
 
     public static void filter_starts_with_name(Queue<StudyGroup> StudyGroupPriorityQueue, String name) {
         answer = "";
         StudyGroupPriorityQueue.stream().filter(student -> student.getName().trim().startsWith(name)).forEach(student ->
-                answer =answer+"\n"+
-                "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
+                answer = answer + "\n" +
+                        "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n"
         );
         answerr.setAnswer(answer);
         MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
-        answerr.cmd="filter_starts_with_name";
+        answerr.cmd = "filter_starts_with_name";
     }
 
 
@@ -470,10 +506,10 @@ public class AllCmd {
         answer = "";
 
         StudyGroupPriorityQueue.stream().filter(student -> student.getStudentsCount() > count).forEach(student -> answer =
-                answer+"\n" + "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
+                answer + "\n" + "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n");
         answerr.setAnswer(answer);
-        answerr.cmd="filter_greater_than_students_count";
+        answerr.cmd = "filter_greater_than_students_count";
         MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
     }
 

@@ -1,5 +1,7 @@
 package GeneralTools;
 
+import javafx.scene.paint.Color;
+
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;

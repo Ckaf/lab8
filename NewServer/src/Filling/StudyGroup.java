@@ -1,5 +1,6 @@
 package Filling;
 
+import java.awt.*;
 import java.time.ZonedDateTime;
 import java.util.Queue;
 
@@ -18,7 +19,9 @@ public class StudyGroup {
     private Enum.Semester semesterEnum;//Поле не может быть null
     private Person groupAdmin;//Поле не может быть null
     private String exp;
-    public StudyGroup(Queue<StudyGroup> StudyGroupPriorityQueue, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) throws Exception {
+    private String Color;
+    private String User;
+    public StudyGroup(Queue<StudyGroup> StudyGroupPriorityQueue, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y,String User,String Color) throws Exception {
         //creationDate=creationDate.minusDays(0);
         creationDate=ZonedDateTime.now();
 //        Iterator<Filling.StudyGroup> it = StudyGroupPriorityQueue.iterator();
@@ -68,6 +71,8 @@ public class StudyGroup {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
             System.exit(0);
         }
+        this.User=User;
+        this.Color=Color;
         this.groupAdmin = new Person(groupAdmin, height, weight, eyeColor);
         this.coordinates = new Coordinates(X, Y);
     }
@@ -140,6 +145,10 @@ public Coordinates getCoordinates(){return coordinates;}
     public Double getCoordinatesY() {
         return coordinates.getY();
     }
+
+    public String getUser(){return User;}
+
+    public String getUserColor(){return Color;}
 
     public void setSemesterEnum(String semestr) {
         if (semestr.equals("5") == true) this.semesterEnum = Enum.Semester.FIFTH;

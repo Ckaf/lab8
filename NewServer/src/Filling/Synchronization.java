@@ -14,12 +14,11 @@ public class Synchronization {
         answer.list = new LinkedList<>();
         MessageHandling.StudyGroupPriorityQueue.stream().sorted(XMLReader.countComparator).forEach(student ->
                 answer.list.add(student.getId() + "," + student.getName() + "," + student.getStudentsCount() + "," + student.getexp() + "," + student.getFormOfEducation() + "," + student.getSemesterEnum() + "," + student.getAdminName()
-                        + "," + student.getHeight() + "," + student.getWeight() + "," + student.getColor() + "," + student.getCoordinatesX() + "," + student.getCoordinatesY()));
+                        + "," + student.getHeight() + "," + student.getWeight() + "," + student.getColor() + "," + student.getCoordinatesX() + "," + student.getCoordinatesY()+ "," +student.getUser()+ "," +student.getUserColor()));
         answer.cmd = "show";
         Logger.login(Level.INFO, "Происходит синхронизация");
 
         UserList.forEach(user -> {
-            System.out.println(user.UpdateAddress);
             sendUpdate(user.UpdateAddress, answer);
         });
 

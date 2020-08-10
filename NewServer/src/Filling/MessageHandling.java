@@ -24,9 +24,9 @@ public class MessageHandling {
     static HashSet<SocketAddress> UserNumber = new HashSet<SocketAddress>();
     public static Queue<StudyGroup> StudyGroupPriorityQueue = new PriorityQueue<StudyGroup>(XMLReader.countComparator);
     private static final SerializationManager<Information> serializationManager = new SerializationManager<>();
-    static ArrayList<User> UserList = new ArrayList<>();
+    public static ArrayList<User> UserList = new ArrayList<>();
 
-    public synchronized static void AcceptedFile(byte[] buffer,SocketAddress socketAddress) throws SQLException, NoSuchAlgorithmException {
+    public synchronized static void AcceptedFile(byte[] buffer, SocketAddress socketAddress) throws SQLException, NoSuchAlgorithmException {
         Information information = null;
         try {
             information = serializationManager.readObject(buffer);
@@ -35,41 +35,42 @@ public class MessageHandling {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
         if (UserNumber.contains(socketAddress) == false) {
             Logger.login(Level.INFO, "Подключается новый клиент с адресом: " + socketAddress);
             UserNumber.add(socketAddress);
             User user = new User();
+            user.login = information.login;
             user.number = socketAddress;
-            user.UpdateAddress= information.address;
-            if (Command.isExistingUser(information.login,information.pass).equals("NOTHING") && information.regtype.equalsIgnoreCase("reg")) {
-                Logger.login(Level.INFO,"Зарегестрировался пользователь с логином: "+information.login);
-                Command.registrationUser(information.login,information.pass);
+            user.UpdateAddress = information.address;
+            if (Command.isExistingUser(information.login, information.pass).equals("NOTHING") && information.regtype.equalsIgnoreCase("reg")) {
+                Logger.login(Level.INFO, "Зарегестрировался пользователь с логином: " + information.login);
+                Command.registrationUser(information.login, information.pass);
                 AllCmd.answerr.autorizatonflag = "regOk";
                 UserList.add(user);
             } else if (information.regtype.equalsIgnoreCase("aut")) {
-                if (!Command.isExistingUser(information.login,information.pass).equals("NOTHING")) {
-                    Logger.login(Level.INFO,"Авторизировался пользователь с логином: "+information.login);
+                if (!Command.isExistingUser(information.login, information.pass).equals("NOTHING")) {
+                    Logger.login(Level.INFO, "Авторизировался пользователь с логином: " + information.login);
                     AllCmd.answerr.autorizatonflag = "autOk";
                     UserList.add(user);
-                }
-                else  AllCmd.answerr.autorizatonflag = "fail";
+                    UserList.stream().forEach(user1 -> {
+                        if (user1.login.equals(user.login)) user.UserColor = user1.UserColor;
+                    });
+                } else AllCmd.answerr.autorizatonflag = "fail";
             } else AllCmd.answerr.autorizatonflag = "fail";
 
         } else
             Logger.login(Level.INFO, "Пришел запрос от клиента с адресом: " + socketAddress);
-       /* if (information.cmdtype.equalsIgnoreCase("file")) {
-            ByteArrayInputStream fileInputStream = new ByteArrayInputStream(information.file);
-            Filling.XMLReader.main(fileInputStream);
-        }
-
-        */
     }
 
-    public synchronized static void Handling(byte[] buffer,SocketAddress socketAddress) throws Exception {
-        //   StudyGroupPriorityQueue = Filling.XMLReader.StudyGroupPriorityQueue;
+    public synchronized static void Handling(byte[] buffer, SocketAddress socketAddress) throws Exception {
         Thread.sleep(10);
         Information information = serializationManager.readObject(buffer);
 
+        if (information.cmdtype.equalsIgnoreCase("getColor")) {
+            Logger.login(Level.INFO, "Устанавливаем цвет пользователя");
+            AllCmd.getColor(information);
+        }
         if (information.cmdtype.equalsIgnoreCase("help")) {
             Logger.login(Level.INFO, "Принимаем пакет с коммандой help");
             AllCmd.help();
@@ -83,7 +84,7 @@ public class MessageHandling {
             Logger.login(Level.INFO, "Принимаем пакет с коммандой info");
         }
         if (information.cmdtype.equalsIgnoreCase("add")) {
-            AllCmd.add(information.name, information.count, information.exp, information.form, information.semestr, information.groupAdmin, information.height, information.weight, information.eyeColor, information.X, information.Y, StudyGroupPriorityQueue,information);
+            AllCmd.add(information.name, information.count, information.exp, information.form, information.semestr, information.groupAdmin, information.height, information.weight, information.eyeColor, information.X, information.Y, StudyGroupPriorityQueue, information);
             Logger.login(Level.INFO, "Принимаем пакет с коммандой add");
         }
         if (information.cmdtype.equalsIgnoreCase("update")) {
@@ -131,46 +132,47 @@ public class MessageHandling {
             AllCmd.exit();
         }
         if (information.cmdtype.equalsIgnoreCase("connect")) {
-                AllCmd.answerr.wrong = 0;
-                try {
-                    if (AllCmd.answerr.autorizatonflag.equals("regOk"))
-                        AllCmd.answerr.answer = "Пользователь зарегестрирован";
-                    if (AllCmd.answerr.autorizatonflag.equals("autOk"))
-                        AllCmd.answerr.answer = "Пользователь авторизован";
-                    if (AllCmd.answerr.autorizatonflag.equals("fail"))
-                        AllCmd.answerr.answer="Ошибка авторизации";
-                }
-               catch (NullPointerException e){}
+            AllCmd.answerr.wrong = 0;
+            try {
+                if (AllCmd.answerr.autorizatonflag.equals("regOk"))
+                    AllCmd.answerr.answer = "Пользователь зарегестрирован";
+                if (AllCmd.answerr.autorizatonflag.equals("autOk"))
+                    AllCmd.answerr.answer = "Пользователь авторизован";
+                if (AllCmd.answerr.autorizatonflag.equals("fail"))
+                    AllCmd.answerr.answer = "Ошибка авторизации";
+            } catch (NullPointerException e) {
             }
-        Answer answer=AllCmd.answerr;
-        if (information.isUpdate){
+        }
+        Answer answer = AllCmd.answerr;
+        if (information.isUpdate) {
             Synchronization.synchronization();
         }
-        Server.sendler(answer,socketAddress);
+        Server.sendler(answer, socketAddress);
 
-        }
-        public synchronized static void HandlingThread(byte[] buffer,SocketAddress socketAddress){
-            ExecutorService service= Executors.newFixedThreadPool(1);
-            Runnable task1=()->{
-                try {
-                    AcceptedFile(buffer,socketAddress);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-            };
-            Runnable task2=()->{
-                try {
-                    Handling(buffer,socketAddress);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            };
-            service.submit(task1);
-            service.submit(task2);
-            service.shutdown();
-        }
     }
+
+    public synchronized static void HandlingThread(byte[] buffer, SocketAddress socketAddress) {
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        Runnable task1 = () -> {
+            try {
+                AcceptedFile(buffer, socketAddress);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        };
+        Runnable task2 = () -> {
+            try {
+                Handling(buffer, socketAddress);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+        service.submit(task1);
+        service.submit(task2);
+        service.shutdown();
+    }
+}
 
 

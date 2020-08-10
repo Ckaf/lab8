@@ -19,16 +19,18 @@ public class SendUpdate {
     private static final SerializationManager<Answer> commandSerializationManager = new SerializationManager<>();
 
 
-    public static void sendUpdate(InetSocketAddress address,Answer answer){
-        connect(address);
+    public static void sendUpdate(InetSocketAddress address, Answer answer) {
+        if (address != null) {
+            connect(address);
             try {
-               byte[] commandInBytes = commandSerializationManager.writeObject(answer);
+                byte[] commandInBytes = commandSerializationManager.writeObject(answer);
                 buffer = ByteBuffer.wrap(commandInBytes);
                 channel.send(buffer, address);
                 buffer.clear();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
     }
 
 
@@ -38,7 +40,7 @@ public class SendUpdate {
             channel.configureBlocking(false);
             channel.connect(address);
         } catch (IOException e) {
-            Logger.login(Level.WARNING,"Ошибка подключения к клиенту:"+address);
+            Logger.login(Level.WARNING, "Ошибка подключения к клиенту:" + address);
         }
     }
 }

@@ -13,8 +13,10 @@ public class Students {
      String eyeColor;
      String x;
      String y;
+     String User;
+     String UserColor;
 
-    public Students(String id, String name, String count, String exp, String form, String semester, String admin_name, String height, String weight, String eyeColor, String x, String y) {
+    public Students(String id, String name, String count, String exp, String form, String semester, String admin_name, String height, String weight, String eyeColor, String x, String y,String User,String UserColor) {
         this.id = id;
         this.name = name;
         this.count = count;
@@ -27,7 +29,17 @@ public class Students {
         this.eyeColor = eyeColor;
         this.x = x;
         this.y = y;
+        this.User=User;
+        this.UserColor=UserColor;
     }
+    public String getStudents(Students students){
+        String str=students.id+","+students.name+","+students.count+","+students.exp+","+students.form+","+students.form+","+students.semester+","+students.admin_name+","+
+                students.height+","+students.weight+","+students.eyeColor+","+students.x+","+students.y;
+        return str;
+    }
+    public String getUser(){return User;}
+
+    public String getUserColor(){return UserColor;}
 
     public String getId() {
         return id;
