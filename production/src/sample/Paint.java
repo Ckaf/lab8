@@ -1,9 +1,12 @@
 package sample;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 import main.java.Client.Students;
 
 import java.util.ResourceBundle;
@@ -78,10 +81,23 @@ public class Paint {
     public static void DrawCircle(String strX, String strY, String strWight, String strHeight, String color) {
         double wight = Double.parseDouble(strWight) / 2;
         double height = Double.parseDouble(strHeight) / 4;
-        double x = Double.parseDouble(strX)*2-wight/2;
-        double y = Double.parseDouble(strY)*2+height/2;
-        context.setFill(javafx.scene.paint.Paint.valueOf(color));
-        context.fillOval(context.getCanvas().getWidth() / 2 + x, context.getCanvas().getHeight() / 2 - y, wight, height);
+        double x = Double.parseDouble(strX)*2;
+        double y = Double.parseDouble(strY)*2;
+        //double x = Double.parseDouble(strX)*2-wight/2;
+        //double y = Double.parseDouble(strY)*2+height/2;
+
+        //context.setFill(javafx.scene.paint.Paint.valueOf(color));
+        //context.fillOval(context.getCanvas().getWidth() / 2 + x, context.getCanvas().getHeight() / 2 - y, wight, height);
+        Circle circle=new Circle();
+        circle.setFill(javafx.scene.paint.Paint.valueOf(color));
+        circle.setCenterX(context.getCanvas().getWidth() / 2 + x);
+        circle.setCenterY(context.getCanvas().getHeight() / 2 - y);
+        circle.setRadius(height/wight);
+        TranslateTransition tt = new TranslateTransition(Duration.millis(2000), circle);
+        tt.setByX(200f);
+        tt.setCycleCount((int) 4f);
+        tt.setAutoReverse(true);
+        tt.play();
     }
     public static void CheckFigure(double x,double y,TableView<Students> table){
         double finalX =(x-canvas.getWidth()/2)/2;
@@ -92,10 +108,7 @@ public class Paint {
             double elementY= Double.parseDouble(element.getY());
             double height= Double.parseDouble(element.getHeight())/4;
             double wight= Double.parseDouble(element.getWeight())/2;
-            if ((((Math.pow(finalX-elementX,2)/Math.pow(wight/2,2))+((Math.pow(finalY-elementY,2))/Math.pow(height/2,2)))<=1)) {
-                System.out.println("element: "+elementX+" "+elementY);
-                System.out.println("полуоси: "+wight+" "+height);
-                System.out.println("==================");
+            if ((((Math.pow(finalX-elementX,2)/Math.pow(wight/4,2))+((Math.pow(finalY-elementY,2))/Math.pow(height/4,2)))<=1)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("info");
                 //alert.setHeaderText();

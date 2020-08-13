@@ -44,13 +44,13 @@ public class Command {
             String Y = resultSet.getString(12);
             String User = resultSet.getString(13);
             String color = resultSet.getString(14);
-            StudyGroup studyGroup = new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, gA, height, weight, eyeColor, X, Y,User,color);
+            StudyGroup studyGroup = new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, gA, height, weight, eyeColor, X, Y, User, color);
             studyGroup.setId(id);
             StudyGroupPriorityQueue.add(studyGroup);
             // Filling.MessageHandling.StudyGroupPriorityQueue.add(studyGroup);
-            User user=new User();
-            user.login=User;
-            user.UserColor= color;
+            User user = new User();
+            user.login = User;
+            user.UserColor = color;
             UserList.add(user);
         }
         MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
@@ -88,16 +88,16 @@ public class Command {
     }
 
     public synchronized static void registrationUser(String login, String password) throws NoSuchAlgorithmException, SQLException {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-384");
-            byte[] bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8));
-            PreparedStatement preparedStatement = Connect.connection.prepareStatement("INSERT INTO logpass VALUES ( ?, ?)");
-            preparedStatement.setString(2, login);
-            String hash = new String(bytes, StandardCharsets.UTF_8);
-            preparedStatement.setString(1, hash);
-            preparedStatement.execute();
-            preparedStatement.close();
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-384");
+        byte[] bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8));
+        PreparedStatement preparedStatement = Connect.connection.prepareStatement("INSERT INTO logpass VALUES ( ?, ?)");
+        preparedStatement.setString(2, login);
+        String hash = new String(bytes, StandardCharsets.UTF_8);
+        preparedStatement.setString(1, hash);
+        preparedStatement.execute();
+        preparedStatement.close();
 
-        }
+    }
 
 
     public synchronized static void add(String name, String count, String exp, String form, String semester, String gA, String height, String weight, String eyeColor, String X, String Y, Information information) throws SQLException {
@@ -123,7 +123,7 @@ public class Command {
         preparedStatement.setString(13, information.login);
         final String[] color = new String[1];
         UserList.stream().forEach(user -> {
-            if (user.login.equals(information.login)) color[0] =user.UserColor;
+            if (user.login.equals(information.login)) color[0] = user.UserColor;
         });
         preparedStatement.setString(14, String.valueOf(color[0]));
 
@@ -151,7 +151,20 @@ public class Command {
                 " height = ?, weight = ?, eye_color = ?, " +
                 "x = ?, y = ? " +
                 "WHERE id = ?");
-
+        try {
+            Integer.parseInt(semester);
+        } catch (Exception e) {
+            if (semester.trim().equals("FIFTH")) semester = "5";
+            if (semester.trim().equals("SIXTH")) semester = "6";
+            if (semester.trim().equals("SEVENTH")) semester = "7";
+            if (semester.trim().equals("EIGHTH")) semester = "8";
+        }
+        if (exp.trim().equals("не отчислен")) exp = "no";
+        if (exp.trim().equals("отчислен")) exp = "yes";
+        if (form.trim().equals("DISTANCE_EDUCATION")) form = "Distance";
+        if (form.trim().equals("FULL_TIME_EDUCATION")) form = "Full time";
+        if (form.trim().equals("EVENING_CLASSES")) form = "Evening";
+        System.out.println(id+","+name+","+count+","+","+exp+","+form+","+semester+","+gA+","+height+","+weight+","+eyeColor+","+X+","+Y);
         preparedStatement.setString(1, name);
         preparedStatement.setInt(2, Integer.parseInt(count));
         preparedStatement.setString(3, exp);

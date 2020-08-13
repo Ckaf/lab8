@@ -2,13 +2,18 @@ package sample;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
@@ -35,7 +40,16 @@ public class Controller {
     private Button registration;
 
     @FXML
+    public ChoiceBox<String> language;
+
+    @FXML
     void initialize() {
+       // ResourceBundle bundle = ResourceBundle.getBundle("locals",Locale.getDefault());
+       // ResourceBundle bundle = ResourceBundle.getBundle("src\\locals",Locale.forLanguageTag("RU"), new UTF8Control());
+        //ObservableList<String> lang = FXCollections.observableArrayList(bundle.getString("rus_lang.properties"), bundle.getString("is_lang"), bundle.getString("pl_lang"), bundle.getString("es_lang"));
+       // language.setItems(lang);
+
+        //System.out.println(lang);
         entrance.setOnAction(event -> {
             if (!pass_field.getText().isEmpty() && !login_field.getText().isEmpty()) {
                 SendCommand.Autorizaton(pass_field.getText(), login_field.getText());
