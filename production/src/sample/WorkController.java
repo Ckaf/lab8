@@ -298,15 +298,15 @@ public class WorkController {
     public boolean CheckForm(Students students){
         if (!students.getForm().equals("DISTANCE_EDUCATION")&& !students.getForm().equals("FULL_TIME_EDUCATION")&&!students.getForm().equals("EVENING_CLASSES")) {
             ErorAlert.alert("Неправильно заполнены поля формы обучения");
-        return false;
+            return false;
         }
         else return true;
     }
     public boolean CheckEyeColor(Students students){
-      if (!students.getEyeColor().equals("RED")&&!students.getEyeColor().equals("BLACK")&&!students.getEyeColor().equals("ORANGE")&&!students.getEyeColor().equals("BROWN")){
-          ErorAlert.alert("Неправильно заполнены поля цвета глаз");
-          return false;
-      }
+        if (!students.getEyeColor().equals("RED")&&!students.getEyeColor().equals("BLACK")&&!students.getEyeColor().equals("ORANGE")&&!students.getEyeColor().equals("BROWN")){
+            ErorAlert.alert("Неправильно заполнены поля цвета глаз");
+            return false;
+        }
         else return true;
     }
     public boolean CheckSemester(Students students){

@@ -1,10 +1,15 @@
 package sample;
 
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import main.java.Client.Students;
@@ -73,42 +78,68 @@ public class Paint {
     }
 
     public static void DrawElement(TableView<Students> table) {
+        ObservableList<AnimationClass> list = FXCollections.observableArrayList();
         table.getItems().stream().forEach((element) -> {
-            DrawCircle(element.getX(), element.getY(), element.getWeight(), element.getHeight(), element.getUserColor());
+            list.add(new AnimationClass(Double.parseDouble(element.getWeight()), Double.parseDouble(element.getHeight())
+                    , Double.parseDouble(element.getX()), Double.parseDouble(element.getY()), element.getUserColor()));
         });
+        DrawCircle(list);
     }
 
-    public static void DrawCircle(String strX, String strY, String strWight, String strHeight, String color) {
-        double wight = Double.parseDouble(strWight) / 2;
-        double height = Double.parseDouble(strHeight) / 4;
-        double x = Double.parseDouble(strX)*2;
-        double y = Double.parseDouble(strY)*2;
-        //double x = Double.parseDouble(strX)*2-wight/2;
-        //double y = Double.parseDouble(strY)*2+height/2;
+    public static void DrawCircle(ObservableList<AnimationClass> list) {
+        int size = list.size();
+        final int[] i = {0};
+        final int[] flag = {0};
+//        final double wight = Double.parseDouble(strWight) / 2;
+//        final double height = Double.parseDouble(strHeight) / 4;
+//        final double x = Double.parseDouble(strX) * 2 - wight / 2;
+//        final double y = Double.parseDouble(strY) * 2 + height / 2;
+        list.forEach(element -> {
+            DoubleProperty xtime = new SimpleDoubleProperty();
+            DoubleProperty ytime = new SimpleDoubleProperty();
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(0),
+                            new KeyValue(xtime, 0),
+                            new KeyValue(ytime, 0)
+                    ),
+                    new KeyFrame(Duration.seconds(3),
+                            new KeyValue(xtime, context.getCanvas().getWidth() / 2 + element.x),
+                            new KeyValue(ytime, context.getCanvas().getHeight() / 2 - element.y)
+                    ));
+            AnimationTimer timer = new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    i[0]++;
 
-        //context.setFill(javafx.scene.paint.Paint.valueOf(color));
-        //context.fillOval(context.getCanvas().getWidth() / 2 + x, context.getCanvas().getHeight() / 2 - y, wight, height);
-        Circle circle=new Circle();
-        circle.setFill(javafx.scene.paint.Paint.valueOf(color));
-        circle.setCenterX(context.getCanvas().getWidth() / 2 + x);
-        circle.setCenterY(context.getCanvas().getHeight() / 2 - y);
-        circle.setRadius(height/wight);
-        TranslateTransition tt = new TranslateTransition(Duration.millis(2000), circle);
-        tt.setByX(200f);
-        tt.setCycleCount((int) 4f);
-        tt.setAutoReverse(true);
-        tt.play();
+                    System.out.println(i[0]);
+                    context.setFill(javafx.scene.paint.Paint.valueOf(element.color));
+                    context.fillOval(xtime.doubleValue(), ytime.doubleValue(), element.wight, element.height);
+                    if (xtime.doubleValue()==context.getCanvas().getWidth() / 2 + element.x)stop();
+                    if (i[0] == size*4) {
+                        i[0] = 0;
+                        context.setFill(javafx.scene.paint.Paint.valueOf("#87CEFA"));
+                        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                        drawAxis();
+                    }
+                }
+            };
+
+            timeline.play();
+            timer.start();
+        });
+//
     }
-    public static void CheckFigure(double x,double y,TableView<Students> table){
-        double finalX =(x-canvas.getWidth()/2)/2;
-        double finalY=(-y+canvas.getHeight()/2)/2 ;
-        System.out.println("координаты:"+ finalX+" "+finalY);
-        table.getItems().stream().forEach(element->{
-            double elementX= Double.parseDouble(element.getX());
-            double elementY= Double.parseDouble(element.getY());
-            double height= Double.parseDouble(element.getHeight())/4;
-            double wight= Double.parseDouble(element.getWeight())/2;
-            if ((((Math.pow(finalX-elementX,2)/Math.pow(wight/4,2))+((Math.pow(finalY-elementY,2))/Math.pow(height/4,2)))<=1)) {
+
+    public static void CheckFigure(double x, double y, TableView<Students> table) {
+        double finalX = (x - canvas.getWidth() / 2) / 2;
+        double finalY = (-y + canvas.getHeight() / 2) / 2;
+        System.out.println("координаты:" + finalX + " " + finalY);
+        table.getItems().stream().forEach(element -> {
+            double elementX = Double.parseDouble(element.getX());
+            double elementY = Double.parseDouble(element.getY());
+            double height = Double.parseDouble(element.getHeight()) / 4;
+            double wight = Double.parseDouble(element.getWeight()) / 2;
+            if ((((Math.pow(finalX - elementX, 2) / Math.pow(wight / 4, 2)) + ((Math.pow(finalY - elementY, 2)) / Math.pow(height / 4, 2))) <= 1)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("info");
                 //alert.setHeaderText();
